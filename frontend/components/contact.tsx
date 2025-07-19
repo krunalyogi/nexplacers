@@ -1,5 +1,6 @@
 // contact.tsx
 "use client"
+
 import { useState } from "react"
 import type React from "react"
 import { Phone, Mail, MapPin, MessageCircle, Clock, Globe, Send, Sparkles } from "lucide-react"
@@ -100,7 +101,133 @@ export function Contact() {
 
   return (
     <section id="contact" className="py-32 bg-luxe-off-white relative overflow-hidden">
-      {/* ... same JSX as before ... */}
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-jet-black mb-4">
+            <Sparkles className="inline-block h-6 w-6 text-gold-luxe mr-2" />
+            Get in <span className="text-gradient-gold">Touch</span>
+          </h2>
+          <p className="text-warm-prestige-gray text-lg max-w-2xl mx-auto">
+            We'd love to hear from you! Reach out for collaborations or inquiries.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-16">
+          {/* Contact Info */}
+          <div className="space-y-8">
+            {contactInfo.map((info, index) => {
+              const Icon = info.icon
+              return (
+                <div key={index} className="flex items-start space-x-4">
+                  <div className="bg-gold-luxe/10 p-3 rounded-xl">
+                    <Icon className="h-6 w-6 text-gold-luxe" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-jet-black">{info.title}</h4>
+                    <p className="text-warm-prestige-gray whitespace-pre-line">{info.content}</p>
+                    {info.action && (
+                      <a
+                        href={info.action}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gold-luxe text-sm hover:underline"
+                      >
+                        {info.title === "WhatsApp" ? "Chat Now" : "Contact"}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Contact Form */}
+          <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gold-luxe/30">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-jet-black mb-2">First Name *</label>
+                <input
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-3 border rounded-xl border-warm-prestige-gray/30 focus:outline-none focus:border-gold-luxe"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-jet-black mb-2">Last Name *</label>
+                <input
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-3 border rounded-xl border-warm-prestige-gray/30 focus:outline-none focus:border-gold-luxe"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-jet-black mb-2">Email *</label>
+              <input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border rounded-xl border-warm-prestige-gray/30 focus:outline-none focus:border-gold-luxe"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-jet-black mb-2">Phone *</label>
+              <input
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border rounded-xl border-warm-prestige-gray/30 focus:outline-none focus:border-gold-luxe"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-jet-black mb-2">Role *</label>
+              <input
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border rounded-xl border-warm-prestige-gray/30 focus:outline-none focus:border-gold-luxe"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-jet-black mb-2">Message *</label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                rows={5}
+                required
+                className="w-full p-3 border rounded-xl border-warm-prestige-gray/30 focus:outline-none focus:border-gold-luxe resize-none"
+              />
+            </div>
+
+            {successMessage && (
+              <div className="bg-emerald-elite/10 text-emerald-elite border border-emerald-elite/30 rounded-xl p-4 text-sm">
+                {successMessage}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-luxury-gold text-jet-black font-bold text-lg py-4 rounded-xl shadow-lg hover:bg-gold-luxe/90 transition-all"
+            >
+              {loading ? "Sending..." : "Send Message"}
+            </Button>
+          </form>
+        </div>
+      </div>
     </section>
   )
 }
