@@ -1,13 +1,13 @@
-'use client'
+"use client"
 
 import { useState } from "react"
-import { DollarSign, Users, Headphones } from "lucide-react"
+import { DollarSign, Users, Headphones, Briefcase, Globe, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ApplyModal from "@/components/ApplyModal"
 
 export function Careers() {
   const [isModalOpen, setModalOpen] = useState(false)
-  const [selectedPosition, setSelectedPosition] = useState('')
+  const [selectedPosition, setSelectedPosition] = useState("")
 
   const positions = [
     {
@@ -34,63 +34,107 @@ export function Careers() {
   ]
 
   return (
-    <section id="careers" className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-6">Join Our Team</h2>
-          <p className="text-xl text-gray-600">Help us transform careers while building your own success story</p>
+    <section id="careers" className="py-32 bg-luxe-off-white relative overflow-hidden">
+      <div className="absolute inset-0">
+        <div
+          className="absolute top-20 right-10 w-96 h-96 bg-gold-luxe/5 rounded-full blur-3xl animate-luxury-float luxury-parallax"
+          data-speed="0.3"
+        ></div>
+        <div
+          className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-platinum-amber-glow/5 rounded-full blur-3xl animate-luxury-float luxury-parallax"
+          data-speed="0.5"
+          style={{ animationDelay: "2s" }}
+        ></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-5xl mx-auto text-center mb-24">
+          <h2 className="text-6xl md:text-7xl font-bold text-jet-black mb-10 luxury-stagger-item">
+            Join Our <span className="text-gradient-gold">Team</span>
+          </h2>
+          <p className="text-2xl text-warm-prestige-gray luxury-stagger-item leading-relaxed">
+            Help us transform careers while building your own success story
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {positions.map((position, index) => (
-            <div key={index} className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-shadow duration-300">
-              <div className="w-12 h-12 bg-gold/10 rounded-lg flex items-center justify-center mb-6">
-                <position.icon className="h-6 w-6 text-gold" />
-              </div>
-
-              <h3 className="text-xl font-bold text-navy-900 mb-2">{position.title}</h3>
-              <div className="text-gold font-medium mb-4">{position.type}</div>
-              <p className="text-gray-600 mb-6">{position.description}</p>
-
-              <div className="mb-6">
-                <h4 className="font-semibold text-navy-900 mb-3">Requirements:</h4>
-                <ul className="space-y-2">
-                  {position.requirements.map((req, reqIndex) => (
-                    <li key={reqIndex} className="text-gray-600 text-sm flex items-start">
-                      <span className="w-2 h-2 bg-gold rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      {req}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <Button
-                className="w-full bg-navy-900 text-white hover:bg-navy-800"
-                onClick={() => {
-                  setSelectedPosition(position.title)
-                  setModalOpen(true)
-                }}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
+          {positions.map((position, index) => {
+            const IconComponent = position.icon
+            return (
+              <div
+                key={index}
+                className="luxury-card p-10 rounded-3xl luxury-hover-lift group luxury-stagger-item"
+                style={{ animationDelay: `${index * 200}ms` }}
               >
-                Apply Now
-              </Button>
-            </div>
-          ))}
+                <div className="w-20 h-20 bg-gradient-luxury-gold rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                  <IconComponent className="h-10 w-10 text-jet-black" />
+                </div>
+
+                <h3 className="text-2xl font-bold text-jet-black mb-3">{position.title}</h3>
+                <div className="text-gold-luxe font-semibold mb-6 text-lg">{position.type}</div>
+                <p className="text-warm-prestige-gray mb-8 leading-relaxed text-lg">{position.description}</p>
+
+                <div className="mb-8">
+                  <h4 className="font-bold text-jet-black mb-4 text-lg">Requirements:</h4>
+                  <ul className="space-y-3">
+                    {position.requirements.map((req, reqIndex) => (
+                      <li key={reqIndex} className="text-warm-prestige-gray flex items-start">
+                        <span className="w-3 h-3 bg-gold-luxe rounded-full mt-2 mr-4 flex-shrink-0"></span>
+                        {req}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Button
+                  className="w-full bg-jet-black text-ivory-white hover:bg-rich-charcoal luxury-btn luxury-hover-lift font-bold py-4"
+                  onClick={() => {
+                    setSelectedPosition(position.title)
+                    setModalOpen(true)
+                  }}
+                >
+                  Apply Now
+                </Button>
+              </div>
+            )
+          })}
         </div>
 
-        <div className="text-center bg-navy-900 rounded-2xl p-8 text-white">
-          <h3 className="text-2xl font-bold mb-4">Ready to Make an Impact?</h3>
-          <p className="text-gray-300 mb-6">
+        <div className="text-center bg-gradient-luxury-dark rounded-3xl p-16 text-ivory-white luxury-stagger-item">
+          <h3 className="text-4xl font-bold mb-6 flex items-center justify-center">
+            <Briefcase className="h-10 w-10 mr-4 text-gold-luxe" />
+            Ready to Make an Impact?
+          </h3>
+          <p className="text-warm-prestige-gray mb-10 text-xl leading-relaxed">
             Join a team that's revolutionizing how professionals find their dream careers
           </p>
-         
+          <div className="flex justify-center space-x-12 text-center">
+            <div className="group luxury-hover-lift cursor-pointer">
+              <div className="flex items-center justify-center mb-4">
+                <Globe className="h-8 w-8 text-gold-luxe mr-3" />
+                <div className="text-3xl font-bold text-gold-luxe">Remote-First</div>
+              </div>
+              <div className="text-warm-prestige-gray text-lg">Work from anywhere</div>
+            </div>
+            <div className="group luxury-hover-lift cursor-pointer">
+              <div className="flex items-center justify-center mb-4">
+                <TrendingUp className="h-8 w-8 text-gold-luxe mr-3" />
+                <div className="text-3xl font-bold text-gold-luxe">Growth-Focused</div>
+              </div>
+              <div className="text-warm-prestige-gray text-lg">Continuous learning</div>
+            </div>
+            <div className="group luxury-hover-lift cursor-pointer">
+              <div className="flex items-center justify-center mb-4">
+                <Users className="h-8 w-8 text-gold-luxe mr-3" />
+                <div className="text-3xl font-bold text-gold-luxe">Impact-Driven</div>
+              </div>
+              <div className="text-warm-prestige-gray text-lg">Transform lives daily</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <ApplyModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        role={selectedPosition}
-      />
+      <ApplyModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} role={selectedPosition} />
     </section>
   )
 }
