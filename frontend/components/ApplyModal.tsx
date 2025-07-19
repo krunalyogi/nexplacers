@@ -39,7 +39,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose }) => {
     if (formData.resume) data.append("resume", formData.resume)
 
     try {
-      const response = await fetch("https://nexplacers-backend.onrender.com/api/apply", {
+      const response = await fetch("https://nexplacers.onrender.com/api/apply", {
         method: "POST",
         body: data,
       })

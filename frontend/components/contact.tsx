@@ -28,7 +28,7 @@ export function Contact() {
     setLoading(true)
 
     try {
-      const response = await fetch("https://nexplacers-backend.onrender.com/api/contact", {
+      const response = await fetch("https://nexplacers.onrender.com/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
