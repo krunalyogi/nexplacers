@@ -1,63 +1,66 @@
-"use client"
-import { useState } from "react"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Upload, Send } from "lucide-react"
+// components/ApplyModal.tsx
+"use client";
+import { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Send } from "lucide-react";
 
 interface ApplyModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  role: string;
 }
 
-const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose }) => {
+const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, role }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     resume: null as File | null,
-  })
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState("")
+  });
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target
+    const { name, value, files } = e.target;
     if (files) {
-      setFormData({ ...formData, resume: files[0] })
+      setFormData({ ...formData, resume: files[0] });
     } else {
-      setFormData({ ...formData, [name]: value })
+      setFormData({ ...formData, [name]: value });
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
-    const data = new FormData()
-    data.append("name", formData.name)
-    data.append("email", formData.email)
-    data.append("phone", formData.phone)
-    if (formData.resume) data.append("resume", formData.resume)
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    if (formData.resume) data.append("resume", formData.resume);
+    data.append("role", role); // Pass the selected job role
 
     try {
-      const response = await fetch("https://nexplacers.onrender.com/api/apply", {
+      const response = await fetch("https://nexplacers-backend.onrender.com/api/apply", {
         method: "POST",
         body: data,
-      })
+      });
 
-      if (!response.ok) throw new Error("Failed to submit application")
+      if (!response.ok) throw new Error("Failed to submit application");
 
-      setSuccessMessage("Application submitted successfully!")
-      setFormData({ name: "", email: "", phone: "", resume: null })
+      setSuccessMessage("Application submitted successfully!");
+      setFormData({ name: "", email: "", phone: "", resume: null });
       setTimeout(() => {
-        setSuccessMessage("")
-        onClose()
-      }, 4000)
+        setSuccessMessage("");
+        onClose();
+      }, 4000);
     } catch (error: any) {
-      alert("Error submitting form: " + error.message)
+      alert("Error submitting form: " + error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -77,7 +80,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose }) => {
             onChange={handleChange}
             placeholder="Full Name"
             required
-            className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-luxe"
+            className="w-full p-4 border border-gray-300 rounded-lg"
           />
           <input
             name="email"
@@ -86,7 +89,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose }) => {
             onChange={handleChange}
             placeholder="Email Address"
             required
-            className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-luxe"
+            className="w-full p-4 border border-gray-300 rounded-lg"
           />
           <input
             name="phone"
@@ -95,7 +98,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose }) => {
             onChange={handleChange}
             placeholder="Phone Number"
             required
-            className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-luxe"
+            className="w-full p-4 border border-gray-300 rounded-lg"
           />
 
           <label className="block">
@@ -129,7 +132,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose }) => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default ApplyModal
+export default ApplyModal;

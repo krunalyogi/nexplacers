@@ -8,8 +8,7 @@ import { Services } from "@/components/services"
 import { WhyChooseUs } from "@/components/why-choose-us"
 import { Pricing } from "@/components/Pricing"
 import { Testimonials } from "@/components/testimonials"
-import git add .
- Careers  from "@/components/careers"
+import  Careers from "@/components/careers"
 import { Resources } from "@/components/resources"
 import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
@@ -98,7 +97,9 @@ export default function Home() {
       <WhyChooseUs />
       <Pricing />
       <Testimonials />
-      <Careers />
+      <Careers isOpen={false} onClose={function (): void {
+        throw new Error("Function not implemented.")
+      } } role={""} />
       <Resources />
       <Contact />
       <CrispChat />
