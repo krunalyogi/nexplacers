@@ -1,13 +1,14 @@
+// backend/routes/contact.ts
 import express, { Request, Response } from 'express';
 import ExcelJS from 'exceljs';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 import Contact from '../models/Contact';
+import { connectToDatabase } from '../lib/mongodb';
 
 const router = express.Router();
 
-// ✅ Utility: Send Excel to Admin via Email
 const sendExcelToAdmin = async (): Promise<void> => {
   try {
     const contacts = await Contact.find();
@@ -58,9 +59,11 @@ const sendExcelToAdmin = async (): Promise<void> => {
   }
 };
 
-// ✅ POST: Save contact form and email Excel to admin
+// ✅ POST: Save contact and email Excel
 router.post('/', async (req: Request, res: Response) => {
   try {
+    await connectToDatabase();
+
     const { firstName, lastName, email, phone, role, message } = req.body;
 
     const newContact = new Contact({ firstName, lastName, email, phone, role, message });
@@ -75,9 +78,11 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-// ✅ GET: Manual export of all contacts as Excel
+// ✅ GET: Export contacts
 router.get('/export', async (_req: Request, res: Response) => {
   try {
+    await connectToDatabase();
+
     const contacts = await Contact.find();
 
     const workbook = new ExcelJS.Workbook();

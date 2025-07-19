@@ -1,4 +1,3 @@
-// backend/server.ts
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -11,19 +10,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Static file access
 app.use('/uploads', express.static('public/uploads'));
 
+// Routes
 import contactRoutes from './routes/Contact';
 app.use('/api/contact', contactRoutes);
 
 import applyRoutes from './routes/apply';
 app.use('/api', applyRoutes); // POST /api/apply
 
-app.listen(5000, () => {
-  console.log('Server running on http://localhost:5000');
-});
-
-
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
@@ -32,6 +29,7 @@ mongoose
   })
   .catch((err: any) => console.error(err));
 
+// Cron job
 import sendContactReport from './utils/sendEmailWithExcel';
 cron.schedule('0 8 * * *', () => {
   console.log('⏰ Running scheduled contact report email (8 AM)');

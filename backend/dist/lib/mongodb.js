@@ -1,25 +1,37 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectToDatabase = void 0;
-// backend/lib/mongodb.ts
-const mongoose_1 = __importDefault(require("mongoose"));
-let isConnected = false;
-const connectToDatabase = async () => {
-    if (isConnected)
-        return;
-    try {
-        await mongoose_1.default.connect(process.env.MONGO_URI, {
-            dbName: 'nexplacers', // Optional: specify your DB name
-        });
-        isConnected = true;
-        console.log('✅ MongoDB connected');
-    }
-    catch (error) {
-        console.error('❌ MongoDB connection error:', error);
-        throw new Error('Failed to connect to MongoDB');
-    }
-};
-exports.connectToDatabase = connectToDatabase;
+import express from 'express';
+import cors from 'cors';
+import cron from 'node-cron';
+import dotenv from 'dotenv';
+import { connectToDatabase } from './lib/mongodb'; // <-- use the utility
+
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.use('/uploads', express.static('public/uploads'));
+
+import contactRoutes from './routes/Contact';
+app.use('/api/contact', contactRoutes);
+
+import applyRoutes from './routes/apply';
+app.use('/api', applyRoutes); // POST /api/apply
+
+// Connect DB and start server
+connectToDatabase()
+  .then(() => {
+    app.listen(5000, () => {
+      console.log('🚀 Server running at http://localhost:5000');
+    });
+  })
+  .catch((err) => {
+    console.error('❌ DB connection failed:', err);
+  });
+
+// CRON job
+import sendContactReport from './utils/sendEmailWithExcel';
+cron.schedule('0 8 * * *', () => {
+  console.log('⏰ Running scheduled contact report email (8 AM)');
+  sendContactReport();
+});
