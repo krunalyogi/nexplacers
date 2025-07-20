@@ -14,7 +14,7 @@ export function Pricing() {
       description: "Built for professionals who want core strategy and job momentum",
       features: [
         "Resume + Resume Utility Check (RUC)",
-        "8 Job Submissions/Week",
+        "weekly job submissions",
         "Email Support",
         "Role Targeting + Strategy Session",
         "Basic LinkedIn Review",

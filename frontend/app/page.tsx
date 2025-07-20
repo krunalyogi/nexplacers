@@ -101,7 +101,7 @@ export default function Home() {
       <Resources />
       <Contact />
       <CrispChat />
-      <Footer />
+      
     </div>
   );
 }
