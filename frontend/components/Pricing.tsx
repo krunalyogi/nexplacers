@@ -50,7 +50,7 @@ export function Pricing() {
       description: "Executive-level polish, coaching, and fast placement",
       features: [
         "Everything in Premium",
-        "2× Dedicated Reverse Recruiters",
+        "A Dedicated Reverse Recruiter",
         "12 Weekly Applications + Strategic Targeting",
         "VIP WhatsApp Support + Priority Turnaround",
         "Advanced Offer Negotiation Support",
