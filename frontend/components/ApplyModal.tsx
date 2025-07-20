@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 
@@ -29,7 +29,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, role }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
-    if (files) {
+    if (files && files.length > 0) {
       setFormData({ ...formData, resume: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -72,10 +72,17 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, role }) => {
     }
   };
 
+  // Adapter for Radix Dialog's onOpenChange signature
+  const handleOpenChange = (open: boolean) => {
+    if (!open) onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl p-10 rounded-3xl">
-        <h2 className="text-3xl font-bold mb-6 text-center">Apply Now</h2>
+        <DialogTitle asChild>
+          <h2 className="text-3xl font-bold mb-6 text-center">Apply Now</h2>
+        </DialogTitle>
 
         {successMessage && (
           <div className="bg-green-100 border border-green-300 text-green-800 px-6 py-4 mb-6 rounded-lg text-center">
