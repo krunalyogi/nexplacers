@@ -120,7 +120,7 @@ const PrivacyPolicy: React.FC = () => {
           Email: <a href="mailto:privacy@nexplacers.com" className="text-blue-600 hover:underline">privacy@nexplacers.com</a><br />
           Phone: +91 8732948070<br />
           Head Office: Gujarat, India<br />
-          U.S. Office: Delaware (LLC Filing Address)<br />
+          U.S. Office: Texas (LLC Filing Address)<br />
           UK & Canada Support: Remotely Operated
         </p>
       </section>

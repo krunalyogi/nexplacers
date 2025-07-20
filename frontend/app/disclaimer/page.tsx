@@ -108,7 +108,7 @@ export default function DisclaimerPage(): JSX.Element {
           This refund policy shall be governed and interpreted under:
         </p>
         <ul className="list-disc list-inside space-y-1 mt-2">
-          <li>United States law (Delaware jurisdiction) for international clients</li>
+          <li>United States law (Texas jurisdiction) for international clients</li>
           <li>Indian law (Gujarat jurisdiction) for domestic clients</li>
         </ul>
         <p className="mt-2">

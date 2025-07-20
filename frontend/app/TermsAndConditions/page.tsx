@@ -63,7 +63,7 @@ const TermsAndConditions = () => {
         Email: <a href="mailto:support@nexplacers.com" className="text-blue-600">support@nexplacers.com</a><br />
         Phone: +91 8732948070<br />
         Office: Gujarat, India<br />
-        U.S. Office: Delaware (Registered Filing Address)
+        U.S. Office: Texas (Registered Filing Address)
       </p>
 
       <p className="mt-6">
