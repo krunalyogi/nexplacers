@@ -1,70 +1,81 @@
-"use client"
+// components/career.tsx
+"use client";
 
-import { useState, useEffect } from "react"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Send } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Send } from "lucide-react";
 
 interface ApplyModalProps {
-  isOpen: boolean
-  onClose: () => void
-  role: string
+  isOpen: boolean;
+  onClose: () => void;
+  role: string;
 }
 
+// Change backend here via env (preferred) or fallback to deployed URL
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, "") ||
+  "https://nexplacers.onrender.com";
+
+// Inline modal (your original structure)
 const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, role }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     resume: null as File | null,
-  })
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState("")
+  });
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    setFormData((prev) => ({ ...prev, role }))
-  }, [role])
+    setFormData((prev) => ({ ...prev, role }));
+  }, [role]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target
+    const { name, value, files } = e.target;
     if (files) {
-      setFormData({ ...formData, resume: files[0] })
+      setFormData({ ...formData, resume: files[0] });
     } else {
-      setFormData({ ...formData, [name]: value })
+      setFormData({ ...formData, [name]: value });
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
-    const data = new FormData()
-    data.append("name", formData.name)
-    data.append("email", formData.email)
-    data.append("phone", formData.phone)
-    data.append("role", role)
-    if (formData.resume) data.append("resume", formData.resume)
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("role", role);
+    if (formData.resume) data.append("resume", formData.resume);
 
     try {
-      const response = await fetch("https://nexplacers-backend.onrender.com/api/apply", {
+      const response = await fetch(`${API_BASE}/api/apply`, {
         method: "POST",
         body: data,
-      })
+      });
 
-      if (!response.ok) throw new Error("Failed to submit application")
+      if (!response.ok) {
+        const msg = await response.text();
+        throw new Error(`HTTP ${response.status}: ${msg}`);
+      }
 
-      setSuccessMessage("Application submitted successfully!")
-      setFormData({ name: "", email: "", phone: "", resume: null })
+      setSuccessMessage("Application submitted successfully!");
+      setFormData({ name: "", email: "", phone: "", resume: null });
+
       setTimeout(() => {
-        setSuccessMessage("")
-        onClose()
-      }, 4000)
+        setSuccessMessage("");
+        onClose();
+      }, 4000);
     } catch (error: any) {
-      alert("Error submitting form: " + error.message)
+      alert("Error submitting form: " + error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -136,7 +147,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, role }) => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default ApplyModal
+export default ApplyModal;

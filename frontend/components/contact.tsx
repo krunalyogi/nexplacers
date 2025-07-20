@@ -1,10 +1,15 @@
-// contact.tsx
-"use client"
+// components/Contact.tsx
+"use client";
 
-import { useState } from "react"
-import type React from "react"
-import { Phone, Mail, MapPin, MessageCircle, Clock, Globe, Send, Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import type React from "react";
+import { Phone, Mail, MapPin, MessageCircle, Clock, Globe, Send, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+// Change backend here via env (preferred) or fallback to deployed URL
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, "") ||
+  "https://nexplacers.onrender.com";
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -14,31 +19,35 @@ export function Contact() {
     phone: "",
     role: "",
     message: "",
-  })
+  });
 
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState("")
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const response = await fetch("https://nexplacers.onrender.com/api/contact", {
+      const response = await fetch(`${API_BASE}/api/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })
+      });
 
-      if (!response.ok) throw new Error("Failed to send message")
+      if (!response.ok) {
+        // surface backend error text (helps debugging)
+        const msg = await response.text();
+        throw new Error(`HTTP ${response.status}: ${msg}`);
+      }
 
-      setSuccessMessage("Message sent successfully! We'll get back to you within 24 hours.")
+      setSuccessMessage("Message sent successfully! We'll get back to you within 24 hours.");
       setFormData({
         firstName: "",
         lastName: "",
@@ -46,19 +55,19 @@ export function Contact() {
         phone: "",
         role: "",
         message: "",
-      })
+      });
 
-      setTimeout(() => setSuccessMessage(""), 5000)
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        alert("Something went wrong: " + err.message)
+        alert("Something went wrong: " + err.message);
       } else {
-        alert("Something went wrong.")
+        alert("Something went wrong.");
       }
     }
 
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   const contactInfo = [
     {
@@ -97,7 +106,7 @@ export function Contact() {
       content: "24/7 support for international clients",
       action: null,
     },
-  ]
+  ];
 
   return (
     <section id="contact" className="py-32 bg-luxe-off-white relative overflow-hidden">
@@ -116,7 +125,7 @@ export function Contact() {
           {/* Contact Info */}
           <div className="space-y-8">
             {contactInfo.map((info, index) => {
-              const Icon = info.icon
+              const Icon = info.icon;
               return (
                 <div key={index} className="flex items-start space-x-4">
                   <div className="bg-gold-luxe/10 p-3 rounded-xl">
@@ -137,12 +146,15 @@ export function Contact() {
                     )}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
 
           {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gold-luxe/30">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gold-luxe/30"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-jet-black mb-2">First Name *</label>
@@ -229,5 +241,5 @@ export function Contact() {
         </div>
       </div>
     </section>
-  )
+  );
 }

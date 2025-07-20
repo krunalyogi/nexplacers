@@ -1,5 +1,6 @@
 // components/ApplyModal.tsx
 "use client";
+
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,11 @@ interface ApplyModalProps {
   onClose: () => void;
   role: string;
 }
+
+// Change backend here via env (preferred) or fallback to deployed URL
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, "") ||
+  "https://nexplacers.onrender.com";
 
 const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, role }) => {
   const [formData, setFormData] = useState({
@@ -39,18 +45,22 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, role }) => {
     data.append("email", formData.email);
     data.append("phone", formData.phone);
     if (formData.resume) data.append("resume", formData.resume);
-    data.append("role", role); // Pass the selected job role
+    data.append("role", role); // pass selected role
 
     try {
-      const response = await fetch("https://nexplacers-backend.onrender.com/api/apply", {
+      const response = await fetch(`${API_BASE}/api/apply`, {
         method: "POST",
         body: data,
       });
 
-      if (!response.ok) throw new Error("Failed to submit application");
+      if (!response.ok) {
+        const msg = await response.text();
+        throw new Error(`HTTP ${response.status}: ${msg}`);
+      }
 
       setSuccessMessage("Application submitted successfully!");
       setFormData({ name: "", email: "", phone: "", resume: null });
+
       setTimeout(() => {
         setSuccessMessage("");
         onClose();
