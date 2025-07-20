@@ -1,118 +1,46 @@
-// backend/routes/contact.ts
+// backend/routes/Contact.ts
 import express, { Request, Response } from 'express';
-import ExcelJS from 'exceljs';
-import nodemailer from 'nodemailer';
-import fs from 'fs';
-import path from 'path';
-import Contact from '../models/Contact';
-import { connectToDatabase } from '../lib/mongodb';
+import mongoose from 'mongoose';
+import ContactModel from '../models/Contact'; // your Contact schema
+import sendContactReport from '../utils/sendEmailWithExcel'; // optional daily report (cron still calls this)
 
 const router = express.Router();
 
-const sendExcelToAdmin = async (): Promise<void> => {
-  try {
-    const contacts = await Contact.find();
-
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Contacts');
-
-    worksheet.columns = [
-      { header: 'First Name', key: 'firstName', width: 20 },
-      { header: 'Last Name', key: 'lastName', width: 20 },
-      { header: 'Email', key: 'email', width: 30 },
-      { header: 'Phone', key: 'phone', width: 20 },
-      { header: 'Role', key: 'role', width: 25 },
-      { header: 'Message', key: 'message', width: 40 },
-      { header: 'Created At', key: 'createdAt', width: 25 },
-    ];
-
-    contacts.forEach((contact: any) => {
-      worksheet.addRow({
-        ...contact.toObject(),
-        createdAt: contact.createdAt?.toLocaleString() || '',
-      });
-    });
-
-    const filePath = path.join(__dirname, '../contacts.xlsx');
-    await workbook.xlsx.writeFile(filePath);
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.ADMIN_EMAIL,
-      subject: '📥 New Contact Form Submissions',
-      text: 'Attached is the latest contact data from the form.',
-      attachments: [{ filename: 'contacts.xlsx', path: filePath }],
-    });
-
-    fs.unlinkSync(filePath);
-    console.log('✅ Excel sent to admin.');
-  } catch (error: any) {
-    console.error('❌ Error sending Excel to admin:', error.message);
-  }
-};
-
-// ✅ POST: Save contact and email Excel
-router.post('/', async (req: Request, res: Response) => {
-  try {
-    await connectToDatabase();
-
-    const { firstName, lastName, email, phone, role, message } = req.body;
-
-    const newContact = new Contact({ firstName, lastName, email, phone, role, message });
-    await newContact.save();
-
-    await sendExcelToAdmin();
-
-    res.status(201).json({ success: true, message: 'Form submitted and Excel emailed to admin.' });
-  } catch (error: any) {
-    console.error('❌ Error saving contact:', error.message);
-    res.status(500).json({ success: false, error: 'Server Error' });
-  }
+/* GET test route so you can open in browser */
+router.get('/', (_req: Request, res: Response) => {
+  res.send('Contact API is working');
 });
 
-// ✅ GET: Export contacts
-router.get('/export', async (_req: Request, res: Response) => {
+/* POST: create contact */
+router.post('/', async (req: Request, res: Response) => {
   try {
-    await connectToDatabase();
+    console.log('📨 Incoming contact submission:', req.body);
+    console.log('🔌 Mongoose readyState:', mongoose.connection.readyState); // 1 = connected
 
-    const contacts = await Contact.find();
+    // Basic body validation (you can expand)
+    const { firstName, lastName, email, phone, role, message } = req.body || {};
+    if (!firstName || !lastName || !email || !phone || !role || !message) {
+      return res.status(400).json({ error: 'Missing required fields.' });
+    }
 
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Contacts');
-
-    worksheet.columns = [
-      { header: 'First Name', key: 'firstName', width: 20 },
-      { header: 'Last Name', key: 'lastName', width: 20 },
-      { header: 'Email', key: 'email', width: 30 },
-      { header: 'Phone', key: 'phone', width: 20 },
-      { header: 'Role', key: 'role', width: 25 },
-      { header: 'Message', key: 'message', width: 40 },
-      { header: 'Created At', key: 'createdAt', width: 25 },
-    ];
-
-    contacts.forEach((contact: any) => {
-      worksheet.addRow({
-        ...contact.toObject(),
-        createdAt: contact.createdAt?.toLocaleString() || '',
-      });
+    const doc = await ContactModel.create({
+      firstName,
+      lastName,
+      email,
+      phone,
+      role,
+      message,
     });
 
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=contacts.xlsx');
+    console.log('✅ Contact saved:', doc._id);
 
-    await workbook.xlsx.write(res);
-    res.end();
-  } catch (error: any) {
-    console.error('❌ Excel export error:', error.message);
-    res.status(500).send('Failed to export contacts');
+    // (Optional) trigger async report/email if you want immediate mail per submission
+    // await sendContactReport(); // Uncomment if desired
+
+    return res.status(201).json({ success: true, id: doc._id });
+  } catch (err: any) {
+    console.error('❌ Contact save error:', err);
+    return res.status(500).json({ error: 'Server error' });
   }
 });
 
