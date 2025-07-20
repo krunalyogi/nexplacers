@@ -195,7 +195,7 @@ export function Footer() {
               <MapPin className="h-6 w-6 text-gold-luxe mr-4" />
               <div>
                 <div className="font-semibold text-ivory-white">Locations</div>
-                <div className="text-warm-prestige-gray">Ahmedabad, India | Delaware, USA</div>
+                <div className="text-warm-prestige-gray">Ahmedabad, India | Texas, US</div>
               </div>
             </div>
           </div>

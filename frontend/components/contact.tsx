@@ -85,7 +85,7 @@ export function Contact() {
     {
       icon: MapPin,
       title: "Locations",
-      content: "Ahmedabad, India (Virtual HQ)\nDelaware, USA (US Office)",
+      content: "Ahmedabad, India (Virtual HQ)\nTexas, US (US Office)",
       action: null,
     },
     {
