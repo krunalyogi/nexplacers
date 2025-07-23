@@ -27,15 +27,14 @@ export default function RootLayout({
         <Script
           id="google-analytics"
           strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-SM31Z69SM9');
-            `,
-          }}
-        />
+        >
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-SM31Z69SM9');
+          `}
+        </Script>
       </head>
       <body>
         <Header />
