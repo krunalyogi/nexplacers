@@ -107,7 +107,8 @@ export default function Home() {
         <link rel="canonical" href="https://nexplacers.com/" />
 
         {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
 
         {/* Google Site Verification */}
         <meta name="google-site-verification" content="VX44F5so6mdsqJbQbh7p-aNgIinkP3dU-z7sw-Fk5V4" />
@@ -132,6 +133,20 @@ export default function Home() {
           content="Helping software professionals and students get high-quality jobs with resume, LinkedIn, and recruiter-led job application support."
         />
         <meta name="twitter:image" content="https://nexplacers.com/logo.png" />
+
+        {/* Logo JSON-LD for Google */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Nexplacers",
+              url: "https://nexplacers.com",
+              logo: "https://nexplacers.com/logo.png",
+            }),
+          }}
+        />
       </Head>
 
       <div className="min-h-screen bg-luxe-off-white overflow-x-hidden">
