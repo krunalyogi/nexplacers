@@ -107,8 +107,8 @@ export default function Home() {
         <link rel="canonical" href="https://nexplacers.com/" />
 
         {/* Favicon */}
-        <link rel="icon" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
 
         {/* Google Site Verification */}
         <meta name="google-site-verification" content="VX44F5so6mdsqJbQbh7p-aNgIinkP3dU-z7sw-Fk5V4" />
